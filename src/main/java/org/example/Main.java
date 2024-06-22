@@ -18,12 +18,19 @@ public class Main {
     }
 
     private static void sessinFactory(SessionFactory sessionFactory){
-        try (Session session = sessionFactory.openSession()) {
-            Book book = session.find(Book.class, 1L);
-            System.out.println(book);
-            System.out.println(book.getAuthor());
-        }
+//        try (Session session = sessionFactory.openSession()) {
+//            Book book = session.find(Book.class, 1L);
+//            System.out.println(book);
+//        }
 
+        try (Session session = sessionFactory.openSession()) {
+            Author author = session.find(Author.class, 1L);
+            System.out.println(author);
+
+            for (Book book : author.getBooks()) {
+                System.out.println(book);
+            }
+        }
 
     }
 

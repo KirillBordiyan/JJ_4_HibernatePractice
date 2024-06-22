@@ -16,7 +16,7 @@ validate = сравнивает вход и факт,
 create = удалил+создал,
 create-drop = удалил-создал-удалил(при прекращении работы)
  -->
-        <property name="hbm2ddl.auto">validate</property>
+        <property name="hbm2ddl.auto">create</property>
 
         <mapping class="org.example.entity.Author"/>
         <mapping class="org.example.entity.Book"/>
