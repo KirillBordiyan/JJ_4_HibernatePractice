@@ -12,7 +12,6 @@ import java.util.List;
 @Table(name = "book")
 @Getter
 @Setter
-@ToString
 public class Book {
 
     @Id
@@ -29,8 +28,17 @@ public class Book {
     @ManyToMany
     @JoinTable(
             name = "author_book",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "author_id")
+            inverseJoinColumns = @JoinColumn(name = "book_id"),
+            joinColumns = @JoinColumn(name = "author_id")
     )
     private List<Author> authors;
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+//                ", authors=" + authors +
+                '}';
+    }
 }

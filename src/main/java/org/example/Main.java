@@ -9,6 +9,7 @@ import org.hibernate.cfg.Configuration;
 
 
 public class Main {
+    // docker exec -ti postgres_sem psql -U postgres
     public static void main(String[] args) {
 
         try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
@@ -24,7 +25,7 @@ public class Main {
 //        }
 
         try (Session session = sessionFactory.openSession()) {
-            Author author = session.find(Author.class, 1L);
+            Author author = session.find(Author.class, 2L);
             System.out.println(author);
 
             for (Book book : author.getBooks()) {

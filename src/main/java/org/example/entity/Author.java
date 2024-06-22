@@ -11,7 +11,6 @@ import java.util.List;
 @Table(name = "author")
 @Getter
 @Setter
-@ToString
 public class Author {
     @Id
     @Column(name = "id")
@@ -34,5 +33,12 @@ public class Author {
     )
     private List<Book> books;
 
+    @Override
+    public String toString() {
+        return "Author{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
 
