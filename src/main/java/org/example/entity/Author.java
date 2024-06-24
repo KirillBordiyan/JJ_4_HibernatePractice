@@ -3,7 +3,6 @@ package org.example.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 
@@ -23,9 +22,8 @@ public class Author {
 //    @JoinTable(name = "book",
 //    joinColumns = @JoinColumn(name = "id"),
 //    inverseJoinColumns = @JoinColumn(name = "author_id"))
-//    private List<Book> books;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "author_book",
             joinColumns = @JoinColumn(name = "author_id"),

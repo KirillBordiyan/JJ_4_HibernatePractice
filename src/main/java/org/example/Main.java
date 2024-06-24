@@ -10,10 +10,10 @@ import org.hibernate.cfg.Configuration;
 
 public class Main {
     // docker exec -ti postgres_sem psql -U postgres
+    //2.12 дз
     public static void main(String[] args) {
 
         try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
-//            withCRUD(sessionFactory);
             sessinFactory(sessionFactory);
         }
     }
@@ -32,7 +32,6 @@ public class Main {
                 System.out.println(book);
             }
         }
-
     }
 
 
