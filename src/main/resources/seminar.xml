@@ -18,8 +18,8 @@ create-drop = удалил-создал-удалил(при прекращени
  -->
         <property name="hbm2ddl.auto">update</property>
 
-        <mapping class="org.example.entity.Author"/>
-        <mapping class="org.example.entity.Book"/>
+        <mapping class="org.example.sem.entity.Author"/>
+        <mapping class="org.example.sem.entity.Book"/>
 
     </session-factory>
 

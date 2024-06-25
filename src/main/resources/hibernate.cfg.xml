@@ -20,6 +20,7 @@
 
         <mapping class="org.example.hw.Post"/>
         <mapping class="org.example.hw.PostComment"/>
+        <mapping class="org.example.hw.User"/>
 
     </session-factory>
 

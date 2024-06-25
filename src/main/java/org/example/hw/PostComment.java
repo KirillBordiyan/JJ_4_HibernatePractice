@@ -26,10 +26,15 @@ public class PostComment {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(name = "timestamp")
     private Timestamp timestamp;
 
-    public PostComment(String text, Post post) {
+    public PostComment(User user, String text, Post post) {
+        this.user = user;
         this.text = text;
         this.post = post;
         this.timestamp = new Timestamp(System.currentTimeMillis());
@@ -39,7 +44,7 @@ public class PostComment {
     public String toString() {
         return "PostComment(" +
                 "id=" + id +
-                ", text='" + text + '\''+
-                ", post_id=" +post.getId() + ")";
+                ", text='" + text + '\'' +
+                ", post_id=" + post.getId() + ")";
     }
 }

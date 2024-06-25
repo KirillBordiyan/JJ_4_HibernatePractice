@@ -7,14 +7,15 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Homework {
     /**
-     * docker run --name social-hw -p 5555:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=1234 -e POSTGRES_DB=social -d postgres
-     * docker exec -ti social-hw psql social -U admin
+
      * <p>
      * <p>
      * Используя hibernate, создать таблицы:
@@ -42,19 +43,75 @@ public class Homework {
 //            createComment(sessionFactory);
 //            listPrinter(selectAllPosts(sessionFactory));
 //            listPrinter(selectAllComments(sessionFactory));
-//            deletePost(sessionFactory);
-//            deleteComment(sessionFactory);
+//            System.out.println("delete post: " + deletePost(sessionFactory));
+//            System.out.println("delete comment: " + deleteComment(sessionFactory));
 
-            //dop
-
-
-
-
-
+            //opt
+//            listPrinter(loadAllCommentsByPostId(sessionFactory));
+//            listPrinter(loadAllPostByUserId(sessionFactory));
+//            listPrinter(loadAllCommentByUserId(sessionFactory));
+//            listPrinter(loadAllUsersByCommentatorId(sessionFactory));
         }
     }
 
-    private static boolean deleteComment(SessionFactory sessionFactory){
+    //opt
+    private static List<User> loadAllUsersByCommentatorId(SessionFactory sessionFactory) {
+        try (Session session = sessionFactory.openSession();
+             Scanner scanner = new Scanner(System.in)) {
+
+            System.out.println("Input user_id to find other users whose posts he commented on: ");
+            Long user_id = Long.parseLong(scanner.nextLine());
+
+            User user = session.find(User.class, user_id);
+
+            List<User> lookingFor = new ArrayList<>();
+
+            user.getPostCommentList()
+                    .forEach(el -> {
+                        User to = session.find(
+                                el.getUser().getClass(),
+                                el.getPost().getUser().getId());
+                        lookingFor.add(to);
+                    });
+
+            return lookingFor;
+        }
+    }
+
+    private static List<PostComment> loadAllCommentByUserId(SessionFactory sessionFactory) {
+        try (Session session = sessionFactory.openSession();
+             Scanner scanner = new Scanner(System.in)) {
+            System.out.println("Input user_id to find user's comments : ");
+            Long user_id = Long.parseLong(scanner.nextLine());
+
+            return session.find(User.class, user_id).getPostCommentList();
+        }
+    }
+
+    private static List<Post> loadAllPostByUserId(SessionFactory sessionFactory) {
+        try (Session session = sessionFactory.openSession();
+             Scanner scanner = new Scanner(System.in)) {
+
+            System.out.println("Input user_id to find posts: ");
+            Long user_id = Long.parseLong(scanner.nextLine());
+
+            return session.find(User.class, user_id).getPostList();
+        }
+    }
+
+    private static List<PostComment> loadAllCommentsByPostId(SessionFactory sessionFactory) {
+        try (Session session = sessionFactory.openSession();
+             Scanner scanner = new Scanner(System.in)) {
+            System.out.println("Input post_id to find comment: ");
+            Long post_id = Long.parseLong(scanner.nextLine());
+
+            return session.find(Post.class, post_id).getComments();
+        }
+    }
+
+
+    //min
+    private static boolean deleteComment(SessionFactory sessionFactory) {
         try (Session session = sessionFactory.openSession();
              Scanner scanner = new Scanner(System.in)
         ) {
@@ -62,7 +119,7 @@ public class Homework {
             Long id = Long.parseLong(scanner.nextLine());
             PostComment postComment = session.find(PostComment.class, id);
 
-            if(postComment == null){
+            if (postComment == null) {
                 throw new NullPointerException("post_id=" + id);
             }
 
@@ -71,7 +128,7 @@ public class Homework {
             session.getTransaction().commit();
 
             return true;
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             System.out.println("No ant match by " + e.getMessage());
             return false;
         }
@@ -85,7 +142,7 @@ public class Homework {
             Long id = Long.parseLong(scanner.nextLine());
             Post post = session.find(Post.class, id);
 
-            if(post == null){
+            if (post == null) {
                 throw new NullPointerException("id=" + id);
             }
 
@@ -94,7 +151,7 @@ public class Homework {
             session.getTransaction().commit();
 
             return true;
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             System.out.println("No ant match by " + e.getMessage());
             return false;
         }
@@ -121,16 +178,21 @@ public class Homework {
              Scanner scanner = new Scanner(System.in)
         ) {
             Transaction transaction = session.beginTransaction();
+            System.out.println("Input user id (which write comment): ");
+            Long user_id = Long.parseLong(scanner.nextLine());
             System.out.println("Input comment text: ");
             String text = scanner.nextLine();
             System.out.println("Input post id: ");
-            Long id = Long.parseLong(scanner.nextLine());
+            Long post_id = Long.parseLong(scanner.nextLine());
 
-            Post post = session.find(Post.class, id);
-            PostComment comment = new PostComment(text, post);
+            User user = session.find(User.class, user_id);
+            Post post = session.find(Post.class, post_id);
 
+            PostComment comment = new PostComment(user, text, post);
+
+            user.addComment(comment);
             post.addComment(comment);
-            session.merge(post);
+            session.merge(user);
 
             transaction.commit();
         }
@@ -141,28 +203,18 @@ public class Homework {
              Scanner scanner = new Scanner(System.in)
         ) {
             Transaction transaction = session.beginTransaction();
+
+            System.out.println("Input user id (which write post): ");
+            Long user_id = Long.parseLong(scanner.nextLine());
+
+            User user = session.find(User.class, user_id);
             System.out.println("Input post title: ");
-            session.persist(new Post(scanner.nextLine()));
+
+            Post post = new Post(user, scanner.nextLine());
+
+            user.addPost(post);
+            session.merge(user);
             transaction.commit();
-        }
-    }
-
-    private static void EXAMPLE(SessionFactory sessionFactory) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction tr = session.beginTransaction();
-            Post post = new Post();
-            post.setTitle("title 1");
-            session.persist(post);
-
-            PostComment pc = new PostComment();
-            pc.setText("text comment 1");
-            pc.setPost(post);
-
-            session.persist(pc);
-
-            System.out.println(post);
-            System.out.println(pc);
-            tr.commit();
         }
     }
 
@@ -171,20 +223,38 @@ public class Homework {
 
             Transaction transaction = session.beginTransaction();
 
-            for (int i = 1; i <= 10; i++) {
-                Post post = new Post("Title of post #" + i);
-                session.persist(post);
+            for (int i = 1; i <= 5; i++) {
+                User user = new User("Name user #" + i);
+                session.persist(user);
             }
 
             for (int i = 1; i <= 10; i++) {
+
+                User user = session.find(
+                        User.class,
+                        ThreadLocalRandom.current().nextInt(1, 6)
+                );
+                Post post = new Post(user, "Title of post #" + i);
+
+                user.addPost(post);
+                session.merge(user);
+            }
+
+            for (int i = 1; i <= 20; i++) {
                 Post post = session.find(
                         Post.class,
                         ThreadLocalRandom.current().nextInt(1, 11));
 
-                PostComment pc = new PostComment("Text of comment #" + i, post);
+                User user = session.find(
+                        User.class,
+                        ThreadLocalRandom.current().nextInt(1, 6));
+
+                PostComment pc = new PostComment(user, "Text of comment #" + i, post);
+
+                user.addComment(pc);
                 post.addComment(pc);
 
-                session.merge(post);
+                session.merge(user);
             }
 
             transaction.commit();

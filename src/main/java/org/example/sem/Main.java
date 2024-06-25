@@ -1,7 +1,7 @@
-package org.example;
+package org.example.sem;
 
-import org.example.entity.Author;
-import org.example.entity.Book;
+import org.example.sem.entity.Author;
+import org.example.sem.entity.Book;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;

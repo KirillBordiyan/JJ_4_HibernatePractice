@@ -24,22 +24,26 @@ public class Post {
     @Column(name = "title")
     private String title;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "post",
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE},
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             fetch = FetchType.EAGER)
     private List<PostComment> comments;
 
     @Column(name = "timestamp")
     private Timestamp timestamp;
 
-    public Post(String title) {
+    public Post(User user, String title) {
+        this.user = user;
         this.title = title;
         this.comments = new ArrayList<>();
         this.timestamp = new Timestamp(randomDate());
     }
 
-    public void addComment(PostComment comment){
+    public void addComment(PostComment comment) {
         comments.add(comment);
     }
 
@@ -51,7 +55,7 @@ public class Post {
                 ", " + comments.toString();
     }
 
-    private long randomDate(){
+    private long randomDate() {
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
 
         Random random = new Random();
@@ -62,10 +66,10 @@ public class Post {
 
         Calendar calendar = new GregorianCalendar();
         calendar.setTimeInMillis(currentTimestamp.getTime());
-        calendar.add(Calendar.DAY_OF_YEAR, - daysAgo);
-        calendar.add(Calendar.HOUR_OF_DAY, - hoursAgo);
-        calendar.add(Calendar.MINUTE, - minutesAgo);
-        calendar.add(Calendar.SECOND, - secondsAgo);
+        calendar.add(Calendar.DAY_OF_YEAR, -daysAgo);
+        calendar.add(Calendar.HOUR_OF_DAY, -hoursAgo);
+        calendar.add(Calendar.MINUTE, -minutesAgo);
+        calendar.add(Calendar.SECOND, -secondsAgo);
 
         return calendar.getTimeInMillis();
     }
