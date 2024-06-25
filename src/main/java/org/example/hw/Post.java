@@ -6,8 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Entity
@@ -37,8 +36,7 @@ public class Post {
     public Post(String title) {
         this.title = title;
         this.comments = new ArrayList<>();
-        this.timestamp = new Timestamp(System.currentTimeMillis()
-                - ThreadLocalRandom.current().nextInt(1000000, 100000000));
+        this.timestamp = new Timestamp(randomDate());
     }
 
     public void addComment(PostComment comment){
@@ -51,5 +49,24 @@ public class Post {
                 id +
                 ", '" + title + '\'' +
                 ", " + comments.toString();
+    }
+
+    private long randomDate(){
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+
+        Random random = new Random();
+        int daysAgo = random.nextInt(7) + 1;
+        int hoursAgo = random.nextInt(24);
+        int minutesAgo = random.nextInt(60);
+        int secondsAgo = random.nextInt(60);
+
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTimeInMillis(currentTimestamp.getTime());
+        calendar.add(Calendar.DAY_OF_YEAR, - daysAgo);
+        calendar.add(Calendar.HOUR_OF_DAY, - hoursAgo);
+        calendar.add(Calendar.MINUTE, - minutesAgo);
+        calendar.add(Calendar.SECOND, - secondsAgo);
+
+        return calendar.getTimeInMillis();
     }
 }

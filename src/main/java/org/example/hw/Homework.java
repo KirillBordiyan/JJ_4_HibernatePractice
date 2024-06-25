@@ -1,20 +1,12 @@
 package org.example.hw;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.annotations.HQLSelect;
-import org.hibernate.annotations.processing.HQL;
-import org.hibernate.annotations.processing.SQL;
 import org.hibernate.cfg.Configuration;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
@@ -54,6 +46,8 @@ public class Homework {
 //            deleteComment(sessionFactory);
 
             //dop
+
+
 
 
 
