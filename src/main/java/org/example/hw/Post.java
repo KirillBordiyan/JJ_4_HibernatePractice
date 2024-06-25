@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Entity
 @Table(name = "post")
