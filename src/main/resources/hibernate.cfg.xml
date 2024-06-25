@@ -16,7 +16,7 @@
         create = удалил+создал,
         create-drop = удалил-создал-удалил(при прекращении работы)
          -->
-        <property name="hbm2ddl.auto">create</property>
+        <property name="hbm2ddl.auto">validate</property>
 
         <mapping class="org.example.hw.Post"/>
         <mapping class="org.example.hw.PostComment"/>
